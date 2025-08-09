@@ -7,6 +7,11 @@
 // Breakpoint para la transición de móvil a escritorio
 $desktop-breakpoint: 1140px;
 
+/* Altura del header (ajusta si cambias logo/paddings) */
+:root { --header-h: 104px; }
+/* Si hay topbar, aumenta la altura total sin usar JS */
+:root:has(.header-topbar) { --header-h: calc(104px + 40px); }
+
 // ==========================================================================
 //  2. Top Bar (Barra de Promociones)
 // ==========================================================================
@@ -16,13 +21,7 @@ $desktop-breakpoint: 1140px;
   font-family: v.$font-family-body;
   font-size: 0.8rem;
   font-weight: 500;
-  padding: 0.5rem 0; // Padding vertical, sin padding horizontal
-  transition: transform 0.3s ease-out, opacity 0.3s ease-out;
-
-  .header.scrolled & {
-    transform: translateY(-100%);
-    opacity: 0;
-  }
+  padding: 0.5rem 0;
 }
 
 .header-topbar-content {
@@ -33,7 +32,7 @@ $desktop-breakpoint: 1140px;
   gap: 1rem;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 1rem; // Padding para que el contenido no toque los bordes
+  padding: 0 1rem;
 }
 
 .header-topbar-left {
@@ -45,21 +44,11 @@ $desktop-breakpoint: 1140px;
     height: 18px;
     width: 18px;
     transition: transform 0.2s ease;
-    &:hover {
-      transform: scale(1.15);
-    }
+    &:hover { transform: scale(1.15); }
   }
 }
 
-.header-topbar-right {
-  font-weight: 600;
-}
-
-@media (max-width: 768px) {
-  .header-topbar-left {
-    display: none;
-  }
-}
+@media (max-width: 768px) { .header-topbar-left { display: none; } }
 
 // ==========================================================================
 //  3. Contenedor Principal del Header
@@ -70,53 +59,46 @@ $desktop-breakpoint: 1140px;
   width: 100%;
   z-index: 1000;
   background-color: v.$color-primary;
-  transition: background-color 0.3s ease;
-
-  &.scrolled {
-    .header-bg {
-      background-color: rgba(v.$color-primary, 0.95);
-      backdrop-filter: blur(8px);
-      box-shadow: 0 2px 15px rgba(v.$color-text, 0.08);
-    }
-  }
 }
 
-.header-bg {
-  transition: all 0.3s ease;
-}
+/* Sin efectos por scroll */
+.header-bg { transition: none; }
 
 .header-top {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem; // <--- CAMBIO AQUÍ
-  max-width: 1200px; // Define el ancho máximo del contenido
-  margin: 0 auto; // Centra el contenedor
-  transition: padding 0.3s ease; // Añadimos transición para el padding
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  transition: none;
 }
 
 // ==========================================================================
-//  4. Logo (Versión Simplificada)
+//  4. Logo
 // ==========================================================================
 .header-logo-link {
   z-index: 1010;
   display: flex;
   align-items: center;
+  flex-shrink: 0; // Evita que el logo se encoja
 }
 
-.header-logo {
-  height: 80px; // <--- CAMBIO A 150PX
-  transition: height 0.3s ease;
-}
-
-// Opcional: el logo se encoge un poco al hacer scroll
-.header.scrolled .header-logo {
-  height: 60px; // <--- AJUSTADO A 60PX
-}
+.header-logo { height: 80px; transition: none; }
 
 // ==========================================================================
-//  5. Botón de Menú Móvil (Hamburguesa a X)
+//  5. Acciones Principales (Móvil) y Botón de Menú
 // ==========================================================================
+.header-main-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Icono de carrito rápido (se muestra en mobile al lado del menú) */
+.mobile-cart-icon { display: none; }
+
 .menu-toggle {
   display: flex;
   flex-direction: column;
@@ -138,41 +120,35 @@ $desktop-breakpoint: 1140px;
   }
 
   .header.menu-open & {
-    .bar:nth-child(1) {
-      transform: translateY(10px) rotate(45deg);
-    }
-    .bar:nth-child(2) {
-      opacity: 0;
-    }
-    .bar:nth-child(3) {
-      transform: translateY(-10px) rotate(-45deg);
-    }
+    .bar:nth-child(1) { transform: translateY(10px) rotate(45deg); }
+    .bar:nth-child(2) { opacity: 0; }
+    .bar:nth-child(3) { transform: translateY(-10px) rotate(-45deg); }
   }
 }
 
 // ==========================================================================
-//  6. Panel de Navegación Unificado
+//  6. Panel de Navegación y Menús
 // ==========================================================================
-
-// --- Estilos Base para Móvil (Panel Deslizante) ---
 .header-nav {
+  /* Móvil: panel fijo que ocupa toda la pantalla desde debajo del header */
+  position: fixed;
+  top: 15vh;  
+  left: 0; right: 0; bottom: 0;
+  background-color: v.$color-bg-alt;
+  border-top: 1px solid v.$color-border-soft;
+  padding: 1.5rem 1.5rem 2rem;
+  overflow-y: auto;
+  z-index: 1005;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;
-  background-color: v.$color-primary;
-  padding: 180px 1.5rem 2rem;
-  transform: translateX(100%);
-  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  overflow-y: auto;
-  z-index: 1005;
+
+  visibility: hidden;
+  opacity: 0;
 
   .header.menu-open & {
-    transform: translateX(0);
+    visibility: visible;
+    opacity: 1;
   }
 }
 
@@ -182,7 +158,6 @@ $desktop-breakpoint: 1140px;
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
 }
 
 .header-link {
@@ -190,27 +165,27 @@ $desktop-breakpoint: 1140px;
   text-decoration: none;
   font-family: v.$font-family-body;
   font-weight: 600;
-  font-size: 1.2rem;
-  padding: 0.5rem 0;
+  font-size: 1.1rem;
+  padding: 1rem 0;
   display: block;
   position: relative;
   transition: color 0.2s ease;
+  border-bottom: 1px solid v.$color-border-soft;
 
-  &.active {
-    color: v.$color-accent-primary;
-  }
+  &.active { color: v.$color-accent-primary; }
 }
 
 .header-link-productos {
-  position: relative;
   cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
   .arrow {
     display: inline-block;
-    transition: transform 0.3s ease;
+    font-size: 1.2rem;
   }
-  &.active .arrow {
-    transform: rotate(90deg);
-  }
+  &.active .arrow { transform: rotate(90deg); }
 }
 
 .mobile-products-menu {
@@ -218,22 +193,19 @@ $desktop-breakpoint: 1140px;
   overflow: hidden;
   transition: max-height 0.4s ease-in-out;
   padding-left: 1rem;
+  border-left: 2px solid v.$color-accent-secondary;
+  margin-top: 0.5rem;
 
-  &.open {
-    max-height: 1000px;
-  }
+  &.open { max-height: 1000px; }
 }
 
-.mobile-category-header, .mobile-submenu-item {
-  font-size: 1rem;
+.mobile-category-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   padding: 0.8rem 0;
-}
-
-.mobile-category-header .arrow {
-  transition: transform 0.3s ease;
-  &.open {
-    transform: rotate(90deg);
-  }
+  font-weight: 600;
+  font-size: 1rem;
 }
 
 .mobile-submenu {
@@ -241,40 +213,32 @@ $desktop-breakpoint: 1140px;
   overflow: hidden;
   transition: max-height 0.4s ease-in-out;
   padding-left: 1rem;
+  list-style: none;
 
-  &.open {
-    max-height: 500px;
-  }
+  &.open { max-height: 500px; }
 }
 
-.mega-menu {
-  display: none;
+.mobile-submenu-item {
+  display: block;
+  padding: 0.6rem 0;
+  font-size: 0.9rem;
+  color: v.$color-text-muted;
+  text-decoration: none;
+  &:hover { color: v.$color-accent-primary; }
 }
 
-// Contenedor de acciones (Mi Cuenta y Carrito)
+.mega-menu { display: none; }
+
+// ==========================================================================
+//  7. Botones de Acción (Mi Cuenta, Carrito)
+// ==========================================================================
+/* Base: sin márgenes/paddings que rompan el alineado en desktop */
 .header-actions {
   display: flex;
-  flex-direction: row;
-  gap: 1rem;
-  margin-top: 2rem;
-  padding-top: 1rem;
-  border-top: 1px solid v.$color-border-soft;
-}
-
-.header-main-actions {
-  display: flex;
   align-items: center;
-  gap: 2rem; // Espacio entre el carrito y el botón de menú
+  gap: 1.5rem;
 }
 
-
-// Por defecto, el icono del carrito móvil está visible
-.mobile-cart-icon {
-  display: flex;
-}
-
-
-// Estilos para los nuevos botones de icono
 .btn--icon {
   background-color: transparent;
   border-radius: 50%;
@@ -286,136 +250,253 @@ $desktop-breakpoint: 1140px;
   position: relative;
   transition: background-color 0.2s ease;
 
-  &:hover {
-    background-color: v.$color-accent-light;
-  }
+  &:hover { background-color: v.$color-accent-light; }
 
   img {
     height: 24px;
     width: 24px;
+    display: block;      /* evita “hanging baseline” */
   }
 }
 
-.btn--icon-cart {
-  .cart-badge {
-    position: absolute;
-    top: 2px;
-    right: 2px;
-    background-color: v.$color-accent-secondary;
-    color: v.$color-text-heading;
-    border-radius: 50%;
-    font-size: 0.7rem;
-    font-weight: 700;
-    line-height: 1;
-    padding: 0.2rem 0.45rem;
-  }
+.btn--icon-cart .cart-badge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  background-color: v.$color-accent-secondary;
+  color: v.$color-text-heading;
+  border-radius: 50%;
+  font-size: 0.7rem;
+  font-weight: 700;
+  line-height: 1;
+  padding: 0.2rem 0.45rem;
 }
 
-// --- Estilos para Escritorio (`min-width: $desktop-breakpoint`) ---
+// ==========================================================================
+//  8. Estilos para Escritorio (NAV contenido entre logo e iconos)
+// ==========================================================================
 @media (min-width: $desktop-breakpoint) {
+  /* Ocultar elementos de mobile y ajustar contenedor */
+  .menu-toggle { display: none; }
+  .mobile-cart-icon { display: none; }
+
   .header-top {
-    padding: 0.5rem;
+    padding: 0.5rem 2rem;
+    align-items: stretch; /* todas las columnas tendrán la misma altura */
   }
 
-  .header-logo {
-    height: 100px; // <--- CAMBIO A 150PX
-    transition: height 0.3s ease;
+  /* Estirar cada columna y centrar su contenido verticalmente */
+  .header-logo-link,
+  .header-nav,
+  .header-actions {
+    align-self: stretch;
+    display: flex;
+    align-items: center;
   }
 
-    .mobile-cart-icon {
+  .mobile-products-menu{
     display: none;
   }
 
-  .menu-toggle {
-    display: none;
+  /* Acciones derechas */
+  .header-actions {
+    margin-left: 2rem;
+    gap: 0.5rem;
+    flex-direction: row;
+    border-top: none;
+    padding-top: 0;
   }
 
+  /* NAV no ocupa todo el ancho: queda del tamaño de su contenido */
   .header-nav {
     position: static;
-    transform: none;
-    height: auto;
-    width: auto;
-    padding: 0;
-    flex-direction: row;
+    display: flex;
     align-items: center;
     background-color: transparent;
+    border: 0;
+    padding: 0;
+    height: auto;
+    visibility: visible;
+    opacity: 1;
     overflow: visible;
+
+    flex: 0 0 auto;   /* clave: no crecer a todo el ancho */
+    margin: 0 auto;   /* queda entre logo e iconos */
   }
 
   .header-nav-list {
+    display: flex;
+    align-items: center;
+    gap: 1.75rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
     flex-direction: row;
-    gap: 2rem;
-  }
-  
-  .header-link {
-    font-size: 0.9rem;
-    font-weight: 700;
-    
-    &:after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 0;
-      height: 2px;
-      background-color: v.$color-accent-primary;
-      transition: width 0.3s ease;
-    }
-    
-    &:hover:after, &.active:after {
-      width: 100%;
-    }
-  }
-  
-  .header-link-productos {
-    cursor: default;
-    .arrow { display: inline-block; }
-  }
-  
-  .mobile-products-menu {
-    display: none;
   }
 
+  .header-nav-list > li {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex: 0 0 auto;   /* cada item solo su ancho natural */
+  }
+
+  /* Enlaces nivel 1: altura clickeable consistente */
+  .header-link,
+  .header-link-productos > span {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    height: 72px;             /* altura clickeable */
+    padding: 0 .25rem;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: v.$color-text-body;
+    text-decoration: none;
+    white-space: nowrap;
+    border: 0; /* sin línea inferior en desktop */
+  }
+
+  .header-link:hover,
+  .header-link.active,
+  .header-link-productos:hover > span,
+  .header-link-productos.active > span {
+    color: v.$color-text-heading;
+  }
+
+  /* “Nuestros productos” con flecha pequeña */
+  .header-link-productos {
+    position: relative;
+    cursor: default;
+
+    .arrow {
+      margin-left: .35rem;
+      width: 6px;
+      height: 6px;
+      border: solid v.$color-text-body;
+      border-width: 0 2px 2px 0;
+      display: inline-block;
+      transform: rotate(-45deg);
+    }
+    &:hover .arrow,
+    &.active .arrow {
+      transform: rotate(135deg);
+      border-color: v.$color-text-heading;
+    }
+  }
+
+  /* Mega-menu (si lo usas) */
   .mega-menu {
-    display: block;
+    display: block; /* sobreescribe display:none base */
     position: absolute;
     top: 100%;
-    left: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    min-width: 760px;
+    max-width: 980px;
     background-color: v.$color-bg-card;
-    box-shadow: 0 4px 20px rgba(v.$color-text, 0.1);
-    border-radius: 8px;
-    padding: 1.5rem;
+    border: 1px solid v.$color-border-soft;
+    box-shadow: 0 16px 50px rgba(v.$color-text, 0.12);
+    border-radius: 12px;
+    padding: 0;
     opacity: 0;
     visibility: hidden;
-    transform: translateY(10px);
-    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+    pointer-events: none;
+
+      /* efecto (no depende del scroll) */
+    transition: opacity .18s ease-out, transform .18s ease-out, visibility .18s ease-out;
+
+    /* Mostrar por hover o por clase .show (TS) */
+    .header-link-productos:hover &,
+    .header-link-productos:focus-within &,
+    &.show {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
   }
 
-  .header-link-productos:hover .mega-menu,
-  .mega-menu.show {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
+  .mega-menu-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1.25rem 2rem;
+    padding: 1.5rem 2rem;
   }
 
-  .header-actions {
-    flex-direction: row;
-    margin-top: 0;
-    padding-top: 0;
-    border-top: none;
-    margin-left: 2rem;
-    gap: 0.5rem; // Menos espacio entre iconos en escritorio
+  .mega-menu-column { display: flex; flex-direction: column; gap: 0.75rem; }
+
+  .mega-menu-title {
+    font-family: v.$font-family-base;
+    font-size: 1rem;
+    color: v.$color-text-heading;
+    font-weight: 700;
+    margin: 0 0 0.25rem 0;
+    white-space: nowrap;
   }
-  
+
+  .mega-menu-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .mega-menu-link {
+    color: v.$color-text-body;
+    text-decoration: none;
+    font-size: 0.92rem;
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: color 0.15s ease, background-color 0.15s ease;
+
+    &:hover {
+      color: v.$color-accent-primary;
+      background-color: v.$color-accent-light;
+    }
+  }
+
   .btn--icon:hover {
     background-color: color.adjust(v.$color-border-soft, $alpha: -0.5);
   }
 }
 
 // ==========================================================================
-//  7. Botones Flotantes
+//  9. Mobile: acciones dentro del menú y pegadas abajo
 // ==========================================================================
-.scroll-to-top-btn, .whatsapp-float-btn {
+@media (max-width: $desktop-breakpoint) {
+  /* Mostrar carrito rápido al lado del menú */
+  .mobile-cart-icon { display: flex; }
+
+  /* Si el menú está cerrado, no mostramos las acciones inferiores */
+  .header:not(.menu-open) .header-actions { display: none; }
+
+  /* Al abrir el menú, mostramos las acciones como barra inferior del panel */
+  .header.menu-open .header-actions {
+    display: flex;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1006; /* por encima del panel (1005) */
+    background: v.$color-bg-alt;
+    padding: 0.75rem 1rem;
+    border-top: 1px solid v.$color-border-soft;
+    justify-content: center;
+    gap: 1rem;
+    flex-direction: row; /* usuario al lado del carrito */
+  }
+
+  /* Evita que el contenido del menú quede tapado por la barra inferior */
+  .header.menu-open .header-nav { padding-bottom: 5.5rem; }
+}
+
+// ==========================================================================
+//  10. Botones Flotantes
+// ==========================================================================
+.scroll-to-top-btn,
+.whatsapp-float-btn {
   position: fixed;
   bottom: 20px;
   background-color: rgb(1, 161, 1);
@@ -429,39 +510,16 @@ $desktop-breakpoint: 1140px;
   justify-content: center;
   cursor: pointer;
   box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-  transition: transform 0.3s ease, opacity 0.3s ease;
   z-index: 999;
-  
-  &:hover {
-    transform: scale(1.1);
-  }
-  
-  img {
-    width: 24px;
-    height: 24px;
-  }
+
+  img { width: 24px; height: 24px; }
 }
 
-.scroll-to-top-btn {
-  right: 20px;
-  opacity: 0;
-  transform: translateY(20px);
-  pointer-events: none;
+/* Visible sin depender de scroll (Angular ya controla su aparición) */
+.scroll-to-top-btn { right: 20px; }
 
-  .header.scrolled & {
-    opacity: 1;
-    transform: translateY(0);
-    pointer-events: auto;
-  }
-}
-
-.whatsapp-float-btn {
-  right: 90px;
-}
+.whatsapp-float-btn { right: 90px; }
 
 @media (max-width: 768px) {
-  .whatsapp-float-btn {
-    right: 20px;
-    bottom: 80px;
-  }
+  .whatsapp-float-btn { right: 20px; bottom: 80px; }
 }
