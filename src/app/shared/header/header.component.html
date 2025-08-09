@@ -1,0 +1,134 @@
+@if (showTopbar) {
+<nav class="header-topbar" aria-label="Topbar de promociones y redes sociales">
+  <div class="header-topbar-content">
+    <div class="header-topbar-left">
+      <span class="header-topbar-label">¡Síguenos!</span>
+      <a href="https://instagram.com/tu-usuario" target="_blank" aria-label="Visita nuestro Instagram" class="header-topbar-icon">
+        <img src="/assets/icons/instagram.svg" alt="Instagram" />
+      </a>
+      <a href="https://facebook.com/tu-pagina" target="_blank" aria-label="Visita nuestro Facebook" class="header-topbar-icon">
+        <img src="/assets/icons/facebook.svg" alt="Facebook" />
+      </a>
+    </div>
+    <div class="header-topbar-right">
+      <span class="header-topbar-promo">🇨🇱 ¡Despacho gratis en compras sobre $25.000! 🇨🇱</span>
+    </div>
+  </div>
+  <div class="header-topbar-divider" role="presentation"></div>
+</nav>
+}
+
+<header class="header" [class.scrolled]="isScrolled" [class.menu-open]="menuOpen">
+  <div class="header-bg">
+    <div class="header-top">
+      <a routerLink="/" class="header-logo-link" aria-label="Página de inicio de Masamia">
+        <img src="logo-masamia.png" alt="Logo de Masamia" class="header-logo" />
+      </a>
+
+      <div class="header-main-actions">
+        <a routerLink="/carrito" 
+          class="header-btn btn--icon btn--icon-cart mobile-cart-icon" 
+          aria-label="Ver carrito de compras">
+          <img src="carrito.png" alt="Carrito de compras" />
+          @if (cartItemCount > 0) {
+            <span class="cart-badge">{{ cartItemCount }}</span>
+          }
+        </a>
+      
+        <button class="menu-toggle" (click)="toggleMenu()" aria-label="Abrir o cerrar menú de navegación" [attr.aria-expanded]="menuOpen">
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+        </button>
+      </div>
+
+      <nav class="header-nav" aria-label="Navegación principal">
+        <ul class="header-nav-list">
+          <li role="none"><a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="header-link" role="menuitem" (click)="closeMenu()">INICIO</a></li>
+          
+          <li class="header-link header-link-productos"
+              (mouseenter)="showMegaMenu()" (mouseleave)="hideMegaMenu()"
+              (click)="toggleMobileProductsMenu()"
+              [class.active]="megaMenuOpen || mobileProductsMenuOpen" role="none">
+            
+            <span role="menuitem" [attr.aria-expanded]="mobileProductsMenuOpen">NUESTROS PRODUCTOS <span class="arrow"></span></span>
+
+            <section class="mega-menu" [class.show]="megaMenuOpen" (mouseenter)="showMegaMenu()" (mouseleave)="hideMegaMenu()">
+              <div class="mega-menu-content">
+                
+                @for (category of productCategories; track category.title) {
+                  <div class="mega-menu-column">
+                    <h3 class="mega-menu-title">{{ category.title }}</h3>
+                    <ul class="mega-menu-list">
+                      @for (item of category.items; track item.name) {
+                        <li>
+                          <a routerLink="{{ item.link }}" class="mega-menu-link" (click)="closeMenu()">
+                            {{ item.name }}
+                          </a>
+                        </li>
+                      }
+                    </ul>
+                  </div>
+                }
+
+              </div>
+            </section>
+
+            <section class="mobile-products-menu" [class.open]="mobileProductsMenuOpen">
+              @for (category of productCategories; track category.title; let i = $index) {
+                <div class="mobile-category-wrapper">
+                  <div class="mobile-category-header" (click)="toggleMobileCategory(i, $event)">
+                    <span>{{ category.title }}</span>
+                    <span class="arrow" [class.open]="mobileCategoryOpenIndex === i"></span>
+                  </div>
+                  <div class="mobile-submenu" [class.open]="mobileCategoryOpenIndex === i">
+                    @for (item of category.items; track item.name) {
+                      <a routerLink="{{ item.link }}" class="mobile-submenu-item" (click)="closeMenu()">
+                        {{ item.name }}
+                      </a>
+                    }
+                  </div>
+                </div>
+              }
+            </section>
+          </li>
+
+          <li role="none"><a routerLink="/nosotros" routerLinkActive="active" class="header-link" role="menuitem" (click)="closeMenu()">NOSOTROS</a></li>
+          <li role="none"><a routerLink="/contacto" routerLinkActive="active" class="header-link" role="menuitem" (click)="closeMenu()">CONTACTO</a></li>
+        </ul>
+
+        <div class="header-actions">
+          <a routerLink="/mi-cuenta" 
+            class="header-btn btn--icon" 
+            aria-label="Ingresar a mi cuenta de cliente" 
+            (click)="closeMenu()">
+            <img src="usuario.png" alt="Mi Cuenta" />
+          </a>
+          
+          <a routerLink="/carrito" 
+            class="header-btn btn--icon btn--icon-cart" 
+            aria-label="Ver carrito de compras" 
+            (click)="closeMenu()">
+            <img src="carrito.png" alt="Carrito de compras" />
+            @if (cartItemCount > 0) {
+              <span class="cart-badge">{{ cartItemCount }}</span>
+            }
+          </a>
+        </div>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<div class="header-shadow-overlay"></div>
+
+@if (isScrolled) {
+  <button class="scroll-to-top-btn" (click)="scrollToTop()" aria-label="Volver arriba">
+    <img src="/assets/icons/arrow-up.svg" alt="Flecha hacia arriba">
+  </button>
+}
+
+<a class="whatsapp-float-btn" href="https://wa.me/569XXXXXXXX?text=Hola%2C%20quisiera%20consultar%20por%20sus%20productos."
+   target="_blank" rel="noopener noreferrer" aria-label="Contactar por WhatsApp">
+  <img src="WhatsApp.webp" alt="Ícono de WhatsApp">
+</a>

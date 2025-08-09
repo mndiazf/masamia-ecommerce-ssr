@@ -1,0 +1,32 @@
+// Paleta de colores para web de Masas Caseras (empanadas, sopaipillas)
+
+// --- Colores Base y Fondos ---
+$color-primary: #fcf9f4; // Fondo Principal (Blanco Harina)
+$color-text: #412a1e; // Texto Principal (Marrón Café Oscuro)
+$color-content-alt: #f6efe5; // Fondo Alternativo (Color Masa Cruda)
+$color-bg-card: #ffffff; // Fondo de Tarjetas/Secciones (Blanco Limpio para contraste)
+$color-bg-alt: #f8f4ed; // Fondo Alternativo (Beige muy claro)
+
+// --- Colores de Acento (Para botones, links y ofertas) ---
+$color-accent-primary: #d15a39; // Acento Primario (Rojo Terracota / Pebre)
+$color-accent-secondary: #ffb423; // Acento Secundario (Amarillo Dorado Sopaipilla)
+$color-accent-light: #fbe6d5; // Acento Claro (Durazno Pálido, para fondos de ofertas)
+
+// --- Sección Oscura (Ej: Footer o banners especiales) ---
+$color-dark-bg: #4f3222; // Fondo Oscuro Alternativo (Marrón Chocolate)
+$color-text-on-dark: #fcf9f4; // Texto sobre fondos oscuros (Blanco Harina)
+$color-text-subtle-on-dark: #e0d5c9; // Texto sutil sobre fondo oscuro
+
+// --- UI y Tipografía ---
+$color-border-soft: #e4dacf; // Bordes suaves (inputs, cards)
+$color-text-placeholder: #a9988a; // Placeholder en inputs
+$color-text-heading: #3a2216; // Títulos (Marrón Oscuro Intenso)
+$color-text-body: #5c473c; // Texto de párrafos (Marrón medio, legible)
+$color-text-muted: #8a766a; // Texto Suave (para detalles, fechas, etc.)
+
+// --- Variantes y Estados ---
+$color-accent-secondary2: #e89a03; // Variante de amarillo para hover o estados secundarios
+
+// --- Tipografía Recomendada ---
+$font-family-base: 'Lora', 'Georgia', serif; // Para títulos, evoca tradición
+$font-family-body: 'Montserrat', 'Lato', Arial, sans-serif; // Para párrafos, muy legible
