@@ -1,0 +1,95 @@
+@use '../../../styles/variables.scss' as v;
+@use 'sass:color';
+
+.register-container {
+  background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  min-height: 100vh;
+  font-family: v.$font-family-body;
+}
+
+.register-card {
+  background-color: v.$color-bg-card;
+  border: 1px solid v.$color-border-soft;
+  border-radius: 12px;
+  padding: 2rem;
+  max-width: 420px;
+  width: 100%;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.register-title {
+  font-family: v.$font-family-base;
+  color: v.$color-text-heading;
+  font-size: 1.8rem;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+
+  label {
+    display: block;
+    font-weight: 600;
+    color: v.$color-text-body;
+    margin-bottom: 0.4rem;
+  }
+
+  input {
+    width: 100%;
+    padding: 0.7rem;
+    border-radius: 6px;
+    border: 1px solid v.$color-border-soft;
+    background-color: v.$color-primary;
+    color: v.$color-text;
+    font-size: 1rem;
+
+    &:focus {
+      border-color: v.$color-accent-secondary;
+      outline: none;
+      box-shadow: 0 0 0 3px color.scale(v.$color-accent-secondary, $alpha: -70%);
+    }
+  }
+}
+
+
+button {
+  width: 100%;
+  padding: 0.8rem;
+  background-color: v.$color-accent-primary;
+  color: v.$color-text-on-dark;
+  font-weight: bold;
+  font-size: 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 0.5rem;
+
+  &:hover {
+    background-color: v.$color-accent-secondary2;
+  }
+
+  &:disabled {
+    background-color: v.$color-text-muted;
+    cursor: not-allowed;
+  }
+}
+
+.login-link {
+  text-align: center;
+  font-size: 0.9rem;
+  margin-top: 1rem;
+
+  a {
+    color: v.$color-accent-primary;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
